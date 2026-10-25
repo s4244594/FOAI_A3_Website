@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeScan AI</title>
+  <meta name="description" content="Learn the warning signs, check a suspicious message, and decide what to do next.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;600;700&family=Noto+Sans+JP:wght@400;700&family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 70'%3E%3Cpath d='M30 3 56 13v20c0 17-11 28-26 34C15 61 4 50 4 33V13Z' fill='%235ce5d2' stroke='%23163c3c' stroke-width='5'/%3E%3Cpath d='m18 35 9 9 16-20' fill='none' stroke='%23062421' stroke-width='5'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- Reusable SVG symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-shield" viewBox="0 0 60 70">
+    <path d="M30 3 56 13v20c0 17-11 28-26 34C15 61 4 50 4 33V13Z" fill="#163c3c"/>
+    <path d="M30 9 50 17v16c0 13-8 22-20 27C18 55 10 46 10 33V17Z" fill="#5ce5d2"/>
+    <path d="m19 35 8 9 15-20" fill="none" stroke="#0d1b22" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-warn" viewBox="0 0 48 48">
+    <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="3.5"/>
+    <path d="M24 11v17" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="24" cy="35" r="2.8" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 26 14">
+    <path d="M0 7h22M16 1l7 6-7 6" fill="none" stroke="currentColor" stroke-width="3"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 28 28">
+    <rect x="2" y="2" width="24" height="24" fill="none" stroke="#5ce5d2" stroke-width="2.5"/>
+    <path d="m7 14 5 5 11-12" fill="none" stroke="#5ce5d2" stroke-width="3"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 28 28">
+    <rect x="2" y="2" width="24" height="24" rx="7" fill="none" stroke="#f4c56c" stroke-width="2.5"/>
+    <path d="M14 7v7h6" fill="none" stroke="#f4c56c" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="i-box" viewBox="0 0 28 28">
+    <rect x="2" y="2" width="24" height="24" fill="none" stroke="#2b3b4e" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M4 2v20l18-10Z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="currentColor"/></symbol>
+</svg>
+
+<header class="site-header">
+  <nav class="nav-inner" aria-label="Main">
+    <a href="#home" class="logo" aria-label="SafeScan AI — home">
+      <svg aria-hidden="true"><use href="#i-shield"/></svg>
+      <span><span class="brand">SafeScan</span> <span class="brand-ai">AI</span></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" data-i18n="nav.menu">Menu</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#home" data-route="home" data-i18n="nav.home">Home</a></li>
+      <li><a href="#learn" data-route="learn" data-i18n="nav.learn">Learn</a></li>
+      <li><a href="#scan" data-route="scan" data-i18n="nav.scan">Scan</a></li>
+      <li><a href="#report" data-route="report" data-i18n="nav.report">Report</a></li>
+      <li><a href="#resources" data-route="resources" data-i18n="nav.resources">Resources</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+
+  <!-- ================= HOME ================= -->
+  <section class="page" id="page-home" aria-labelledby="home-title">
+    <div class="hero">
+      <div class="hero-art" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="kicker" data-i18n="home.kicker">A little pause can make a big difference</p>
+        <h1 class="hero-title" id="home-title">
+          <span data-i18n="home.l1">Scan.</span>
+          <span data-i18n="home.l2">So you don’t get</span>
+          <span class="cursor" data-i18n="home.l3">Scammed.</span>
+        </h1>
+        <p class="hero-sub" data-i18n="home.sub">Learn the warning signs, check a suspicious message, and decide what to do next.</p>
+        <div class="hero-actions">
+          <a href="#scan" class="btn btn-primary btn-pixel">
+            <span data-i18n="home.check">Check a message</span>
+            <svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+          <button type="button" class="btn" data-action="open-lang" data-i18n="home.lang">Change language</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEARN ================= -->
+  <section class="page" id="page-learn" aria-labelledby="learn-title">
+    <div class="wrap">
+      <h1 class="page-title cursor" id="learn-title" data-i18n="learn.title">How to use SafeScan</h1>
+      <p class="page-sub" data-i18n="learn.sub">A step-by-step walkthrough of a scam check. Use the arrows or your keyboard to move between steps.</p>
+
+      <div class="tutorial">
+        <figure class="shot" style="margin:0">
+          <img id="tut-img" src="assets/tutorial/language.jpg" alt="">
+        </figure>
+        <div class="tut-text panel">
+          <p class="tut-step-label" id="tut-counter">Step 1 / 6</p>
+          <h2 id="tut-title"></h2>
+          <p id="tut-body"></p>
+          <div class="tut-nav">
+            <button type="button" class="btn btn-sm" id="tut-prev" data-i18n="learn.prev">Back</button>
+            <button type="button" class="btn btn-primary btn-sm" id="tut-next" data-i18n="learn.next">Next</button>
+            <a href="#scan" class="btn btn-sm" id="tut-start" hidden data-i18n="learn.start">Start a scan</a>
+          </div>
+          <div class="dots" id="tut-dots" role="group" aria-label="Tutorial steps"></div>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="learn.signsTitle">Common warning signs</h2>
+      <p class="section-sub" data-i18n="learn.signsSub">Tap a sign to see an example.</p>
+      <div class="signs" id="signs"></div>
+
+      <h2 class="section-title" data-i18n="learn.practiceTitle">Practise with an example</h2>
+      <p class="section-sub" data-i18n="learn.practiceSub">Load a sample message into the scanner to see how a check works.</p>
+      <div class="examples" id="examples"></div>
+    </div>
+  </section>
+
+  <!-- ================= SCAN ================= -->
+  <section class="page" id="page-scan" aria-labelledby="scan-title">
+    <div class="wrap">
+      <div class="scan-grid">
+        <div class="scan-left">
+          <div class="panel title-card">
+            <h1 class="page-title cursor" id="scan-title" data-i18n="scan.title">Check a message.</h1>
+          </div>
+          <div class="panel info-card">
+            <p data-i18n="scan.info1">Paste the message you received or upload a screenshot. We will look for warning signs and explain what we find.</p>
+            <p data-i18n="scan.info2">The result is a guide, not a guarantee. If you are unsure, contact your bank or the sender using an official number.</p>
+          </div>
+        </div>
+
+        <div class="panel-accent">
+          <!-- Input state -->
+          <form id="scan-form" novalidate>
+            <fieldset class="consent" id="consent">
+              <p class="consent-tag"><svg aria-hidden="true"><use href="#i-shield"/></svg><span data-i18n="scan.consentTag">Quick question before you scan</span></p>
+              <legend data-i18n="scan.consent">Can we keep a copy of this message, with your details removed, to help us learn about new scams? Saying no will not change your result</legend>
+              <div class="choice-row">
+                <label class="chip"><input type="radio" name="consent" value="yes"> <span data-i18n="common.yes">Yes</span></label>
+                <label class="chip"><input type="radio" name="consent" value="no"> <span data-i18n="common.no">No</span></label>
+              </div>
+            </fieldset>
+
+            <div class="tabs" role="tablist">
+              <button type="button" class="tab" role="tab" id="tab-text" aria-selected="true" data-i18n="scan.tabText">Paste text</button>
+              <button type="button" class="tab" role="tab" id="tab-upload" aria-selected="false" data-i18n="scan.tabUpload">Upload a screenshot</button>
+            </div>
+
+            <label for="msg-input" class="sr-only" data-i18n="scan.tabText">Paste text</label>
+            <textarea id="msg-input" class="msg-input" dir="auto" data-i18n-placeholder="scan.placeholder" placeholder="paste the SMS, email or chat message here..."></textarea>
+
+            <div class="or-divider" data-i18n="scan.or">OR</div>
+
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-describedby="drop-hint">
+              <div id="drop-empty">
+                <svg viewBox="0 0 56 56" aria-hidden="true"><path d="M28 6v32M16 18 28 6l12 12M8 40v8h40v-8" fill="none" stroke="currentColor" stroke-width="3.5"/></svg>
+                <strong data-i18n="scan.drop">Drag a screenshot here or upload a file</strong>
+                <small id="drop-hint" data-i18n="scan.dropHint">PNG or JPG</small>
+              </div>
+              <div class="preview" id="drop-preview" hidden>
+                <img id="preview-img" alt="">
+                <div>
+                  <p class="file-name" id="preview-name"></p>
+                  <button type="button" class="btn btn-sm" id="remove-file" data-i18n="scan.remove">Remove</button>
+                </div>
+              </div>
+              <input type="file" id="file-input" accept="image/png,image/jpeg" hidden>
+            </div>
+
+            <p class="form-error" id="scan-error" role="alert" hidden></p>
+
+            <div class="scan-footer">
+              <p data-i18n="scan.privacy">Do not include passwords, OTPs, or card numbers. Hide them before you paste, or upload</p>
+              <button type="submit" class="btn btn-primary">
+                <span data-i18n="scan.btn">Scan message</span>
+                <svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+          </form>
+
+          <!-- Scanning state -->
+          <div id="scanning" hidden aria-live="polite">
+            <p class="label-sm" data-i18n="scanning.your">Your message</p>
+            <div class="msg-echo" id="msg-echo" dir="auto"></div>
+            <div class="progress-head">
+              <span data-i18n="scanning.label">Scanning...</span>
+              <span id="progress-pct">0 %</span>
+            </div>
+            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+              <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <ul class="checklist" id="checklist">
+              <li data-i18n="scanning.s1">Reading the text and language</li>
+              <li data-i18n="scanning.s2">Looking for urgent or threatening wording</li>
+              <li data-i18n="scanning.s3">Checking links and payments requests</li>
+              <li data-i18n="scanning.s4">Preparing your explaination</li>
+            </ul>
+            <button type="button" class="btn" id="cancel-scan" data-i18n="scanning.cancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESULTS ================= -->
+  <section class="page" id="page-results" aria-labelledby="results-title">
+    <div class="wrap">
+      <h1 class="page-title cursor" id="results-title" data-i18n="res.title">Here is what we found</h1>
+      <p class="page-sub" data-i18n="res.sub">The AI has checked your message and explained the results below.</p>
+      <div class="results-grid">
+        <div class="panel-accent">
+          <div class="verdict">
+            <div class="risk-badge" data-slot="risk-badge"></div>
+            <div>
+              <h2 data-slot="type"></h2>
+              <small data-slot="confidence"></small>
+            </div>
+          </div>
+          <div class="highlighted" id="highlighted" dir="auto"></div>
+          <p class="hl-hint" id="hl-hint" data-i18n="res.hint">Highlighted parts are the warning signs. Hover or tap them for details.</p>
+          <div class="flags" id="flags"></div>
+          <div class="actions-row">
+            <a href="#next-steps" class="btn btn-primary">
+              <span data-i18n="res.next">next steps</span>
+              <svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+            <button type="button" class="btn" data-action="new-scan" data-i18n="res.another">Check another message</button>
+          </div>
+        </div>
+        <aside class="side">
+          <div class="side-card">
+            <h3 data-i18n="res.wrongTitle">Does this look wrong?</h3>
+            <p data-i18n="res.wrongSub">Tell us. Help us improve.</p>
+            <button type="button" class="btn" data-action="report-error" data-i18n="res.reportError">Report an error</button>
+          </div>
+          <div class="side-card listen-card">
+            <h3 data-i18n="res.listenTitle">Prefer to listen?</h3>
+            <div class="side-row">
+              <button type="button" class="btn btn-primary" data-action="listen" data-target="results">
+                <svg class="play-icon" aria-hidden="true"><use href="#i-play"/></svg>
+                <span data-i18n="res.listen">listen</span>
+              </button>
+              <label class="sr-only" for="voice-lang-1" data-i18n="res.voiceLang">Listening language</label>
+              <select class="select voice-lang" id="voice-lang-1"></select>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NEXT STEPS ================= -->
+  <section class="page" id="page-next-steps" aria-labelledby="ns-title">
+    <div class="wrap">
+      <h1 class="page-title cursor" id="ns-title" data-i18n="ns.title">Your next safe step</h1>
+      <p class="page-sub" data-i18n="ns.sub">Here is what to do now</p>
+      <div class="results-grid">
+        <div class="panel-accent">
+          <div class="verdict">
+            <div class="risk-badge" data-slot="risk-badge"></div>
+            <div>
+              <h2 data-slot="type"></h2>
+              <small data-slot="confidence"></small>
+            </div>
+          </div>
+          <ol class="steps" id="steps"></ol>
+        </div>
+        <aside class="side">
+          <div class="side-card">
+            <h3 data-i18n="ns.whatsNext">What's next?</h3>
+            <div class="side-stack">
+              <button type="button" class="btn btn-primary btn-block" data-action="new-scan" data-i18n="res.another">Check another message</button>
+              <a href="#home" class="btn btn-block" data-i18n="ns.home">Back to home</a>
+            </div>
+          </div>
+          <div class="side-card listen-card">
+            <h3 data-i18n="res.listenTitle">Prefer to listen?</h3>
+            <div class="side-row">
+              <button type="button" class="btn btn-primary" data-action="listen" data-target="steps">
+                <svg class="play-icon" aria-hidden="true"><use href="#i-play"/></svg>
+                <span data-i18n="res.listen">listen</span>
+              </button>
+              <label class="sr-only" for="voice-lang-2" data-i18n="res.voiceLang">Listening language</label>
+              <select class="select voice-lang" id="voice-lang-2"></select>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REPORT ================= -->
+  <section class="page" id="page-report" aria-labelledby="report-title">
+    <div class="wrap">
+      <h1 class="page-title cursor" id="report-title" data-i18n="rep.title">Report</h1>
+      <p class="page-sub" data-i18n="rep.sub">Tell us about a scam, or about a result that looked wrong.</p>
+      <div class="two-col">
+        <div class="panel-accent">
+          <div class="success" id="report-success" hidden role="status">
+            <h3 data-i18n="rep.thanks">Thank you</h3>
+            <p data-i18n="rep.thanksBody">Your report has been saved. If you lost money, also report it to your bank and the official agencies listed in Resources.</p>
+          </div>
+          <form id="report-form" class="form-grid">
+            <div class="field">
+              <label for="rep-type" data-i18n="rep.type">What are you reporting?</label>
+              <select id="rep-type" name="type">
+                <option value="scam" data-i18n="rep.typeScam">A scam message</option>
+                <option value="error" data-i18n="rep.typeError">A wrong result</option>
+                <option value="feedback" data-i18n="rep.typeFeedback">Website feedback</option>
+              </select>
+            </div>
+            <div class="field">
+              <fieldset>
+                <legend data-i18n="rep.channel">How did you receive it?</legend>
+                <div class="choice-row">
+                  <label class="chip"><input type="radio" name="channel" value="sms" checked> <span data-i18n="ch.sms">SMS</span></label>
+                  <label class="chip"><input type="radio" name="channel" value="email"> <span data-i18n="ch.email">Email</span></label>
+                  <label class="chip"><input type="radio" name="channel" value="call"> <span data-i18n="ch.call">Phone call</span></label>
+                  <label class="chip"><input type="radio" name="channel" value="social"> <span data-i18n="ch.social">Social media / chat</span></label>
+                  <label class="chip"><input type="radio" name="channel" value="other"> <span data-i18n="ch.other">Other</span></label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="field">
+              <label for="rep-message" data-i18n="rep.message">The message (remove any personal details)</label>
+              <textarea id="rep-message" name="message" dir="auto" required></textarea>
+            </div>
+            <div class="field">
+              <fieldset>
+                <legend data-i18n="rep.lost">Did you lose money or share details?</legend>
+                <div class="choice-row">
+                  <label class="chip"><input type="radio" name="lost" value="no" checked> <span data-i18n="common.no">No</span></label>
+                  <label class="chip"><input type="radio" name="lost" value="yes"> <span data-i18n="common.yes">Yes</span></label>
+                </div>
+              </fieldset>
+            </div>
+            <div class="field">
+              <label for="rep-notes" data-i18n="rep.notes">Anything else? (optional)</label>
+              <textarea id="rep-notes" name="notes" style="min-height:90px"></textarea>
+            </div>
+            <p class="form-error" id="report-error" role="alert" hidden data-i18n="rep.required">Please add the message before sending.</p>
+            <button type="submit" class="btn btn-primary" data-i18n="rep.submit">Send report</button>
+          </form>
+        </div>
+        <aside class="side" style="padding-top:0">
+          <div class="side-card">
+            <h3 data-i18n="rep.lostTitle">Lost money?</h3>
+            <p style="font-family:var(--font-body);font-size:17px;margin:0 0 18px" data-i18n="rep.lostBody">Call your bank now using the number on its official app, website or the back of your card. Ask them to stop or reverse the payment.</p>
+            <a href="#resources" class="btn btn-sm" data-i18n="rep.official">Official places to report</a>
+          </div>
+          <div class="side-card">
+            <h3 data-i18n="rep.saved">Your saved reports</h3>
+            <p style="font-family:var(--font-body);font-size:14px;margin:0;color:var(--muted)" data-i18n="rep.savedNote">Stored only in this browser.</p>
+            <ul class="report-list" id="report-list"></ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESOURCES ================= -->
+  <section class="page" id="page-resources" aria-labelledby="resources-title">
+    <div class="wrap">
+      <h1 class="page-title cursor" id="resources-title" data-i18n="resx.title">Resources</h1>
+      <p class="page-sub" data-i18n="resx.sub">Trusted places to get help and report scams.</p>
+      <div class="two-col">
+        <div>
+          <div class="res-grid" id="res-grid"></div>
+        </div>
+        <div class="panel">
+          <h3 data-i18n="resx.checkTitle">Quick safety checklist</h3>
+          <p style="margin:0 0 18px;color:var(--muted)" data-i18n="resx.checkSub">Before you reply, click or pay — tick each one.</p>
+          <ul class="safety-list" id="safety-list"></ul>
+          <p id="checklist-done" class="form-error" style="color:var(--green)" hidden data-i18n="resx.checkDone">Well done — you paused and checked. That is the best protection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Act now banner (every page) -->
+<aside class="act-now" aria-labelledby="act-title">
+  <span class="act-badge" data-i18n="alert.badge">Act now</span>
+  <div>
+    <h2 id="act-title" data-i18n="alert.title">Money or account at risk?</h2>
+    <p data-i18n="alert.body">Do not share passwords, OTPs, PINs, or bank details. Stop responding. Contact your bank using a number from its official app or website, and contact the relevant authorities if money is at risk.</p>
+  </div>
+</aside>
+
+<!-- Language modal -->
+<div class="modal-backdrop" id="lang-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lang-title">
+    <svg class="modal-shield" aria-hidden="true"><use href="#i-shield"/></svg>
+    <h2 id="lang-title" data-i18n="modal.title">CHOOSE YOUR LANGUAGE</h2>
+    <p data-i18n="modal.sub">Choose how you would like to begin. You can change this later.</p>
+    <form class="lang-form" id="lang-form">
+      <fieldset>
+        <legend data-i18n="modal.label">Language</legend>
+        <div class="lang-grid">
+          <label class="lang-option"><input type="radio" name="lang" value="en" checked> <span lang="en">English</span></label>
+          <label class="lang-option"><input type="radio" name="lang" value="zh"> <span lang="zh">中文 (普通话)</span></label>
+          <label class="lang-option"><input type="radio" name="lang" value="vi"> <span lang="vi">Tiếng Việt</span></label>
+          <label class="lang-option"><input type="radio" name="lang" value="ar"> <span lang="ar" dir="rtl">العربية</span></label>
+          <label class="lang-option"><input type="radio" name="lang" value="pa"> <span lang="pa">ਪੰਜਾਬੀ</span></label>
+          <label class="lang-option"><input type="radio" name="lang" value="it"> <span lang="it">Italiano</span></label>
+        </div>
+      </fieldset>
+      <p class="demo-note" role="note">Demo version: every option shows the site in English for now.</p>
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="modal.confirm">Confirm</button>
+    </form>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox" hidden><img alt=""></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/analyzer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
