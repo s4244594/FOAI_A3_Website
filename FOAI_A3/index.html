@@ -54,8 +54,9 @@
       <li><a href="#home" data-route="home" data-i18n="nav.home">Home</a></li>
       <li><a href="#learn" data-route="learn" data-i18n="nav.learn">Learn</a></li>
       <li><a href="#scan" data-route="scan" data-i18n="nav.scan">Scan</a></li>
-      <li><a href="#report" data-route="report" data-i18n="nav.report">Report</a></li>
-      <li><a href="#resources" data-route="resources" data-i18n="nav.resources">Resources</a></li>
+      <!-- Placeholders only: these tabs are shown but do not open a page -->
+      <li><a href="#" class="nav-placeholder" aria-disabled="true" data-i18n="nav.report">Report</a></li>
+      <li><a href="#" class="nav-placeholder" aria-disabled="true" data-i18n="nav.resources">Resources</a></li>
     </ul>
   </nav>
 </header>
@@ -234,7 +235,7 @@
           <div class="side-card">
             <h3 data-i18n="res.wrongTitle">Does this look wrong?</h3>
             <p data-i18n="res.wrongSub">Tell us. Help us improve.</p>
-            <button type="button" class="btn" data-action="report-error" data-i18n="res.reportError">Report an error</button>
+            <button type="button" class="btn" data-i18n="res.reportError">Report an error</button>
           </div>
           <div class="side-card listen-card">
             <h3 data-i18n="res.listenTitle">Prefer to listen?</h3>
@@ -288,94 +289,6 @@
             </div>
           </div>
         </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= REPORT ================= -->
-  <section class="page" id="page-report" aria-labelledby="report-title">
-    <div class="wrap">
-      <h1 class="page-title cursor" id="report-title" data-i18n="rep.title">Report</h1>
-      <p class="page-sub" data-i18n="rep.sub">Tell us about a scam, or about a result that looked wrong.</p>
-      <div class="two-col">
-        <div class="panel-accent">
-          <div class="success" id="report-success" hidden role="status">
-            <h3 data-i18n="rep.thanks">Thank you</h3>
-            <p data-i18n="rep.thanksBody">Your report has been saved. If you lost money, also report it to your bank and the official agencies listed in Resources.</p>
-          </div>
-          <form id="report-form" class="form-grid">
-            <div class="field">
-              <label for="rep-type" data-i18n="rep.type">What are you reporting?</label>
-              <select id="rep-type" name="type">
-                <option value="scam" data-i18n="rep.typeScam">A scam message</option>
-                <option value="error" data-i18n="rep.typeError">A wrong result</option>
-                <option value="feedback" data-i18n="rep.typeFeedback">Website feedback</option>
-              </select>
-            </div>
-            <div class="field">
-              <fieldset>
-                <legend data-i18n="rep.channel">How did you receive it?</legend>
-                <div class="choice-row">
-                  <label class="chip"><input type="radio" name="channel" value="sms" checked> <span data-i18n="ch.sms">SMS</span></label>
-                  <label class="chip"><input type="radio" name="channel" value="email"> <span data-i18n="ch.email">Email</span></label>
-                  <label class="chip"><input type="radio" name="channel" value="call"> <span data-i18n="ch.call">Phone call</span></label>
-                  <label class="chip"><input type="radio" name="channel" value="social"> <span data-i18n="ch.social">Social media / chat</span></label>
-                  <label class="chip"><input type="radio" name="channel" value="other"> <span data-i18n="ch.other">Other</span></label>
-                </div>
-              </fieldset>
-            </div>
-            <div class="field">
-              <label for="rep-message" data-i18n="rep.message">The message (remove any personal details)</label>
-              <textarea id="rep-message" name="message" dir="auto" required></textarea>
-            </div>
-            <div class="field">
-              <fieldset>
-                <legend data-i18n="rep.lost">Did you lose money or share details?</legend>
-                <div class="choice-row">
-                  <label class="chip"><input type="radio" name="lost" value="no" checked> <span data-i18n="common.no">No</span></label>
-                  <label class="chip"><input type="radio" name="lost" value="yes"> <span data-i18n="common.yes">Yes</span></label>
-                </div>
-              </fieldset>
-            </div>
-            <div class="field">
-              <label for="rep-notes" data-i18n="rep.notes">Anything else? (optional)</label>
-              <textarea id="rep-notes" name="notes" style="min-height:90px"></textarea>
-            </div>
-            <p class="form-error" id="report-error" role="alert" hidden data-i18n="rep.required">Please add the message before sending.</p>
-            <button type="submit" class="btn btn-primary" data-i18n="rep.submit">Send report</button>
-          </form>
-        </div>
-        <aside class="side" style="padding-top:0">
-          <div class="side-card">
-            <h3 data-i18n="rep.lostTitle">Lost money?</h3>
-            <p style="font-family:var(--font-body);font-size:17px;margin:0 0 18px" data-i18n="rep.lostBody">Call your bank now using the number on its official app, website or the back of your card. Ask them to stop or reverse the payment.</p>
-            <a href="#resources" class="btn btn-sm" data-i18n="rep.official">Official places to report</a>
-          </div>
-          <div class="side-card">
-            <h3 data-i18n="rep.saved">Your saved reports</h3>
-            <p style="font-family:var(--font-body);font-size:14px;margin:0;color:var(--muted)" data-i18n="rep.savedNote">Stored only in this browser.</p>
-            <ul class="report-list" id="report-list"></ul>
-          </div>
-        </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= RESOURCES ================= -->
-  <section class="page" id="page-resources" aria-labelledby="resources-title">
-    <div class="wrap">
-      <h1 class="page-title cursor" id="resources-title" data-i18n="resx.title">Resources</h1>
-      <p class="page-sub" data-i18n="resx.sub">Trusted places to get help and report scams.</p>
-      <div class="two-col">
-        <div>
-          <div class="res-grid" id="res-grid"></div>
-        </div>
-        <div class="panel">
-          <h3 data-i18n="resx.checkTitle">Quick safety checklist</h3>
-          <p style="margin:0 0 18px;color:var(--muted)" data-i18n="resx.checkSub">Before you reply, click or pay — tick each one.</p>
-          <ul class="safety-list" id="safety-list"></ul>
-          <p id="checklist-done" class="form-error" style="color:var(--green)" hidden data-i18n="resx.checkDone">Well done — you paused and checked. That is the best protection.</p>
-        </div>
       </div>
     </div>
   </section>

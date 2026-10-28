@@ -56,13 +56,10 @@
     document.documentElement.dir = LANGS[shown].dir;
     $$("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
     $$("[data-i18n-placeholder]").forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
-    $$(".voice-lang").forEach(sel => { sel.value = shown; });
+    $$(".voice-lang").forEach(sel => { sel.value = lang; });
     renderTutorial();
     renderSigns();
     renderExamples();
-    renderResources();
-    renderSafetyList();
-    renderReports();
     if (state.result) { renderResults(); renderSteps(); }
   }
 
@@ -116,7 +113,7 @@
   });
 
   /* ---------------- Router ---------------- */
-  const ROUTES = ["home", "learn", "scan", "results", "next-steps", "report", "resources"];
+  const ROUTES = ["home", "learn", "scan", "results", "next-steps"];
   const NAV_FOR = { results: "scan", "next-steps": "scan" };
 
   function route() {
@@ -135,11 +132,13 @@
     });
     $("#nav-links").classList.remove("open");
     $(".nav-toggle").setAttribute("aria-expanded", "false");
-    stopSpeaking();
     window.scrollTo({ top: 0, behavior: "instant" });
     document.title = page === "home" ? "SafeScan AI" : `${$("#page-" + page + " h1").textContent.trim()} · SafeScan AI`;
   }
   window.addEventListener("hashchange", route);
+
+  // Report and Resources tabs are placeholders with no page behind them
+  $$(".nav-placeholder").forEach(a => a.addEventListener("click", e => e.preventDefault()));
 
   $(".nav-toggle").addEventListener("click", e => {
     const open = $("#nav-links").classList.toggle("open");
@@ -394,11 +393,9 @@
     const r = state.result;
     if (!r) return;
     fillVerdict($("#page-next-steps"));
-    $("#steps").innerHTML = r.steps.map((s, i) => {
-      let desc = escapeHtml(t(`step.${s}.d`));
-      if (s === "report") desc += ` — <a href="#report">${escapeHtml(t("nav.report"))}</a>`;
-      return `<li><span class="step-num">${i + 1}</span><div><h4>${escapeHtml(t(`step.${s}.t`))}</h4><p>${desc}</p></div></li>`;
-    }).join("");
+    $("#steps").innerHTML = r.steps.map((s, i) =>
+      `<li><span class="step-num">${i + 1}</span><div><h4>${escapeHtml(t(`step.${s}.t`))}</h4><p>${escapeHtml(t(`step.${s}.d`))}</p></div></li>`
+    ).join("");
   }
 
   /* ---------------- Global actions ---------------- */
@@ -416,72 +413,13 @@
       location.hash = "#scan";
       setTimeout(() => textarea.focus(), 50);
     }
-    if (action === "report-error") {
-      $("#rep-type").value = "error";
-      $("#rep-message").value = state.text;
-      $("#rep-notes").value = state.result
-        ? `${t("risk." + state.result.risk, "en")} — ${t("type." + state.result.type, "en")}\n` : "";
-      $("#report-success").hidden = true;
-      location.hash = "#report";
-      setTimeout(() => $("#rep-notes").focus(), 50);
-    }
-    if (action === "listen") toggleSpeech(btn);
   });
 
-  /* ---------------- Read aloud ---------------- */
-  let speakingBtn = null;
-
-  function buildSpeech(target, lang) {
-    const r = state.result;
-    const parts = [t("risk." + r.risk, lang) + ".", t("type." + r.type, lang) + "."];
-    if (target === "results") {
-      parts.push(`${t("res.confidence", lang)}: ${t("conf." + r.confidence, lang)}.`);
-      if (!r.flags.length) parts.push(t("res.noFlags", lang));
-      r.flags.forEach(f => parts.push(`${t(`flag.${f}.t`, lang)}: ${t(`flag.${f}.d`, lang)}.`));
-    } else {
-      parts.push(t("ns.sub", lang) + ".");
-      r.steps.forEach((s, i) => parts.push(`${i + 1}. ${t(`step.${s}.t`, lang)}. ${t(`step.${s}.d`, lang)}.`));
-    }
-    return parts.join(" ");
-  }
-
-  function setListenButton(btn, playing) {
-    btn.querySelector("use").setAttribute("href", playing ? "#i-stop" : "#i-play");
-    btn.querySelector("span").textContent = t(playing ? "res.stop" : "res.listen");
-  }
-
-  function stopSpeaking() {
-    if ("speechSynthesis" in window) speechSynthesis.cancel();
-    if (speakingBtn) { setListenButton(speakingBtn, false); speakingBtn = null; }
-  }
-
-  function toggleSpeech(btn) {
-    if (!("speechSynthesis" in window)) { toast(t("toast.noSpeech")); return; }
-    if (speakingBtn === btn) { stopSpeaking(); return; }
-    stopSpeaking();
-    if (!state.result) return;
-    const lang = DEMO_ENGLISH_ONLY ? "en" : $(".voice-lang", btn.closest(".side-card")).value;
-    const utter = new SpeechSynthesisUtterance(buildSpeech(btn.dataset.target, lang));
-    utter.lang = LANGS[lang].voice;
-    const voice = speechSynthesis.getVoices().find(v => v.lang.replace("_", "-").startsWith(lang));
-    if (voice) utter.voice = voice;
-    else if (speechSynthesis.getVoices().length) toast(t("toast.noVoice"));
-    utter.rate = 0.95;
-    utter.onend = utter.onerror = () => { if (speakingBtn === btn) stopSpeaking(); };
-    speakingBtn = btn;
-    setListenButton(btn, true);
-    speechSynthesis.speak(utter);
-  }
-
-  // Populate voice-language selects
+  /* ---------------- Listen (demo) ---------------- */
+  // Demo build: there is no audio. The language list only shows how a reader would be chosen.
   $$(".voice-lang").forEach(sel => {
     sel.innerHTML = Object.entries(LANGS).map(([code, l]) => `<option value="${code}">${l.name}</option>`).join("");
-    sel.addEventListener("change", () => {
-      if (speakingBtn) stopSpeaking();
-      if (DEMO_ENGLISH_ONLY && sel.value !== "en") toast(DEMO_NOTE);
-    });
   });
-  if ("speechSynthesis" in window) speechSynthesis.getVoices(); // warm up voice list
 
   /* ---------------- Learn: tutorial ---------------- */
   const TUTORIAL = [
@@ -591,86 +529,6 @@
     state.fromExample = true;
     location.hash = "#scan";
     setTimeout(() => form.requestSubmit(), 300);
-  });
-
-  /* ---------------- Report ---------------- */
-  function renderReports() {
-    const reports = store.get("safescan.reports", []);
-    const list = $("#report-list");
-    if (!reports.length) { list.innerHTML = `<li>${escapeHtml(t("rep.none"))}</li>`; return; }
-    const typeKey = { scam: "rep.typeScam", error: "rep.typeError", feedback: "rep.typeFeedback" };
-    list.innerHTML = reports.slice().reverse().map(r => `
-      <li>
-        <div class="meta">
-          <span>${escapeHtml(t(typeKey[r.type]))} · ${escapeHtml(t("ch." + r.channel))} · ${new Date(r.date).toLocaleString(displayLang())}</span>
-          <button type="button" class="link-btn" data-delete="${r.id}">${escapeHtml(t("rep.delete"))}</button>
-        </div>
-        <p class="snippet">${escapeHtml(r.message.length > 140 ? r.message.slice(0, 140) + "…" : r.message)}</p>
-      </li>`).join("");
-  }
-
-  $("#report-list").addEventListener("click", e => {
-    const b = e.target.closest("[data-delete]");
-    if (!b) return;
-    store.set("safescan.reports", store.get("safescan.reports", []).filter(r => r.id !== b.dataset.delete));
-    renderReports();
-  });
-
-  $("#report-form").addEventListener("submit", e => {
-    e.preventDefault();
-    const f = e.currentTarget;
-    const el = f.elements;
-    const message = el.message.value.trim();
-    if (!message) { $("#report-error").hidden = false; el.message.focus(); return; }
-    $("#report-error").hidden = true;
-    const reports = store.get("safescan.reports", []);
-    reports.push({
-      id: String(Date.now()),
-      date: new Date().toISOString(),
-      type: el.type.value,
-      channel: el.channel.value,
-      lost: el.lost.value,
-      message,
-      notes: el.notes.value.trim()
-    });
-    store.set("safescan.reports", reports);
-    f.reset();
-    renderReports();
-    const ok = $("#report-success");
-    ok.hidden = false;
-    ok.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-
-  /* ---------------- Resources ---------------- */
-  const RESOURCES = [
-    { region: "Australia", name: "Scamwatch", url: "https://www.scamwatch.gov.au/report-a-scam", desc: "Report a scam and get the latest scam warnings (National Anti-Scam Centre)." },
-    { region: "Australia", name: "ReportCyber", url: "https://www.cyber.gov.au/report-and-recover/report", desc: "Report cybercrime such as hacked accounts or online fraud." },
-    { region: "Australia / NZ", name: "IDCARE", url: "https://www.idcare.org", desc: "Free support if your identity or personal details have been stolen." },
-    { region: "United States", name: "FTC ReportFraud", url: "https://reportfraud.ftc.gov", desc: "Report fraud, scams and bad business practices." },
-    { region: "United Kingdom", name: "Action Fraud", url: "https://www.actionfraud.police.uk", desc: "The UK's national reporting centre for fraud and cybercrime." },
-    { region: "Canada", name: "Canadian Anti-Fraud Centre", url: "https://antifraudcentre-centreantifraude.ca", desc: "Report fraud and learn about current scams." },
-    { region: "International", name: "econsumer.gov", url: "https://www.econsumer.gov", desc: "Report international online scams to consumer agencies in many countries." }
-  ];
-
-  function renderResources() {
-    $("#res-grid").innerHTML = RESOURCES.map(r => `
-      <a class="res-card" href="${r.url}" target="_blank" rel="noopener noreferrer" lang="en">
-        <span class="region">${escapeHtml(r.region)}</span>
-        <h4>${escapeHtml(r.name)} ↗</h4>
-        <p>${escapeHtml(r.desc)}</p>
-      </a>`).join("");
-  }
-
-  function renderSafetyList() {
-    const checked = store.get("safescan.checklist", []);
-    $("#safety-list").innerHTML = [1, 2, 3, 4, 5, 6].map(n => `
-      <li><label><input type="checkbox" data-check="${n}" ${checked.includes(n) ? "checked" : ""}><span>${escapeHtml(t("check." + n))}</span></label></li>`).join("");
-    $("#checklist-done").hidden = checked.length < 6;
-  }
-  $("#safety-list").addEventListener("change", () => {
-    const checked = $$("#safety-list input:checked").map(i => +i.dataset.check);
-    store.set("safescan.checklist", checked);
-    $("#checklist-done").hidden = checked.length < 6;
   });
 
   /* ---------------- Init ---------------- */
